@@ -75,7 +75,7 @@ class stokController extends Controller
             'barang' => $barang, 'user' => $user, 'activeMenu' => $activeMenu]);
     }
 
-    public function store(StokRequest $request): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
         $request->validate([
             'stok_tanggal' => 'required|date',

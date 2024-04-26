@@ -75,7 +75,7 @@ class levelController extends Controller
     /**
      * validate Level form and store that in database
      */
-    public function store(LevelRequest $request): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
         $request->validate([
             'level_kode' => 'required|string|min:3|max:5|unique:m_level,level_kode',

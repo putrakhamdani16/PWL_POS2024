@@ -5,19 +5,40 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Models\LevelModel;
 
-class userModel extends Model
+
+class UserModel extends Authenticatable
 {
     use HasFactory;
 
-    protected $table = 'm_user'; //to define the name of the table used
-    protected $primaryKey = 'user_id'; //to define the primary key of the table used
-
-//    protected $fillable = ['level_id', 'username', 'nama', 'password'];
-    protected $fillable = ['level_id', 'username', 'nama', 'password'];
+    protected $table = "m_user";
+    public $timestamps = false;
+    protected $primaryKey = 'user_id';
+    protected $fillable = [
+        'user_id',
+        'level_id',
+        'username',
+        'nama',
+        'password',
+    ];
 
     public function level(): BelongsTo
     {
-        return $this->belongsTo(levelModel::class, 'level_id', 'level_id');
+        return $this->belongsTo(LevelModel::class, 'level_id', 'level_id');
     }
 }
+// class UserModel extends Model
+// {
+//     use HasFactory;
+
+//     protected $table ='m_user';
+//     protected $primaryKey = 'user_id';
+//     protected $fillable = ['level_id', 'username', 'nama', 'password'];
+//     public function level(): BelongsTo{
+//         return $this->belongsTo(LevelModel::class, 'level_id', 'level_id');
+//     }
+// }

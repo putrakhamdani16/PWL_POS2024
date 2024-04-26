@@ -112,7 +112,7 @@ class TransaksiPenjualanController extends Controller
                 'user_id' => $request->user_id,
                 'pembeli' => $request->pembeli,
                 'penjualan_id' => $request->penjualan_id,
-                'penjualan_tanggal' => now(),
+                'penjulan_tanggal' => now(),
             ]);
         }
         $barang = barangModel::find($request->barang_id);

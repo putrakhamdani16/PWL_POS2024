@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BabyKidController;
 use App\Http\Controllers\BeautyHealthController;
@@ -9,18 +8,15 @@ use App\Http\Controllers\HomeCareController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\PenjualanController;
-use App\Http\Controllers\POSController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
-
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\barangController;
 use App\Http\Controllers\stokController;
 use App\Http\Controllers\TransaksiPenjualanController;
-
-
-//home
-Route::get('/', [HomeController::class, 'index']);
+use App\Http\Controllers\ManagerController;
 
 //Category dengan subcategory
 Route::prefix('category')->group(function () {
@@ -51,7 +47,6 @@ Route::get('/', [WelcomeController::class, 'index']);
 Route::resource('user', UserController::class);
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::prefix('/kategori')->group(function () {
     Route::get('/', [KategoriController::class, 'index']);
     Route::get('/create', [KategoriController::class, 'create']);
@@ -88,3 +83,18 @@ Route::post('penjualan/list', [TransaksiPenjualanController::class, 'list']);
 
 Route::get('/user', [UserController::class,'index'])->name('user.index');
 Route::put('/user/{id}', [UserController::class,'update'])->name('user.update');
+
+Route::get('login', [AuthController::class, 'index'])->name('login');
+Route::get('register', [AuthController::class,'register'])->name('register');
+Route::post('proses_login', [AuthController::class, 'proses_login'])->name('proses_login');
+Route::get('logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('proses_register', [AuthController::class, 'proses_register'])->name('proses_register');
+
+Route::group(['middleware' => ['auth']], function () {
+    Route::group(['middleware' => ['cek_login:1']], function() {
+        Route::resource('admin', AdminController::class);
+    });
+    Route::group(['middleware' => ['cek_login:2']], function() {
+        Route::resource('manager', ManagerController::class);
+    });
+});

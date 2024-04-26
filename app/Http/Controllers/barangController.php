@@ -72,7 +72,7 @@ class barangController extends Controller
             'kategori' => $kategori, 'activeMenu' => $activeMenu]);
     }
 
-    public function store(BarangRequest $request): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
         $request->validate([
             'barang_kode' => 'required|string|min:3|unique:m_barang,barang_kode',
