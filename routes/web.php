@@ -1,21 +1,90 @@
 <?php
 
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\BabyKidController;
+use App\Http\Controllers\BeautyHealthController;
+use App\Http\Controllers\FoodBeverageController;
+use App\Http\Controllers\HomeCareController;
+use App\Http\Controllers\LevelController;
+use App\Http\Controllers\KategoriController;
+use App\Http\Controllers\PenjualanController;
+use App\Http\Controllers\POSController;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+use App\Http\Controllers\barangController;
+use App\Http\Controllers\stokController;
+use App\Http\Controllers\TransaksiPenjualanController;
+
+
+//home
+Route::get('/', [HomeController::class, 'index']);
+
+//Category dengan subcategory
+Route::prefix('category')->group(function () {
+    Route::get('/foodbeverage', [FoodBeverageController::class, 'index']);
+    Route::get('/homecare', [HomeCareController::class, 'index']);
+    Route::get('/babykid', [BabyKidController::class, 'index']);
+    Route::get('/beautyhealth', [BeautyHealthController::class, 'index']);
+});
+
+//User view
+Route::get('/id/{id}/name/{name}', [UserController::class, 'index']);
+//Penjualan View
+Route::get('/penjualan', [PenjualanController::class, 'index']);
+
 
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/level', [LevelController::class, 'index']);
+Route::get('/kategori', [KategoriController::class, 'index']);
+Route::get('/user', [UserController::class, 'index']);
+Route::get('/user/tambah', [UserController::class, 'tambah']);
+Route::post('/user/tambah_simpan', [UserController::class, 'tambah_simpan']);
+Route::get('/user/ubah/{id}', [UserController::class, 'ubah']);
+Route::put('/user/ubah_simpan/{id}', [UserController::class, 'ubah_simpan']);
+Route::get('/user/hapus/{id}', [UserController::class, 'hapus']);
+Route::get('/', [WelcomeController::class, 'index']);
+Route::resource('user', UserController::class);
+Auth::routes();
 
-Route::get('/',[WelcomeController::class, 'index']);
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::prefix('/kategori')->group(function () {
+    Route::get('/', [KategoriController::class, 'index']);
+    Route::get('/create', [KategoriController::class, 'create']);
+    Route::post('/', [KategoriController::class, 'store']);
+    Route::get('/edit/{id}', [KategoriController::class, 'edit'])->name('kategori.edit');
+    Route::put('/update/{id}', [KategoriController::class, 'update'])->name('kategori.update');
+    Route::get('/delete/{id}', [KategoriController::class, 'destroy'])->name('kategori.delete');
+});
+Route::prefix('user')->group(function () {
+    Route::get('/', [UserController::class, 'index']);
+    Route::post('/list', [UserController::class, 'list']);
+    Route::get('/create', [UserController::class, 'create']);
+    Route::post('/', [UserController::class, 'store']);
+    Route::get('/{id}', [UserController::class, 'show']);
+    Route::get('/{id}/edit', [UserController::class, 'edit']);
+    Route::put('/{id}', [UserController::class, 'update']);
+    Route::delete('/{id}', [UserController::class, 'destroy']);
+});
+Route::resource('level', LevelController::class);
+Route::post('level/list', [LevelController::class, 'list']);
+
+Route::resource('kategori', kategoriController::class);
+Route::post('kategori/list', [kategoriController::class, 'list']);
+
+Route::resource('barang', barangController::class);
+Route::post('barang/list', [barangController::class, 'list']);
+
+Route::resource('stok', stokController::class);
+Route::post('stok/list', [stokController::class, 'list']);
+
+Route::resource('penjualan', TransaksiPenjualanController::class);
+Route::post('penjualan/list', [TransaksiPenjualanController::class, 'list']);
+
+
+Route::get('/user', [UserController::class,'index'])->name('user.index');
+Route::put('/user/{id}', [UserController::class,'update'])->name('user.update');
